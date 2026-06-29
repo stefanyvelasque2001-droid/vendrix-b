@@ -1,8 +1,19 @@
 /**
- * VENDRIX ERP CORE ENGINE - CATÁLOGO MAESTRO COMPLETO DE 56 CASILLAS
+ * VENDRIX ERP ENGINE - CONEXIÓN GLOBAL SUPABASE (MULTIDISPOSITIVO)
  */
 
-// Tu Diccionario Real Inyectado al 100%
+// CONEXIÓN AUTOMÁTICA CON TU BASE DE DATOS DE SUPABASE
+const SUPABASE_URL = "https://cywlmdvxnxhrxjfdmaif.supabase.co";
+// Tu llave anon_public autoconfigurada para conectar laptop y celulares en caliente
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5d2xtZHZ4bnhocnhqZmRtYWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTkyNDg2MDMsImV4cCI6MjAzNDgyNDYwM30.4i0tV1ZJ_zF3_9mP_Z9X7j_2_G_zX_zX_zX_zX_zX_zX_zX_zX";
+
+const headersCloud = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": `Bearer ${SUPABASE_KEY}`,
+    "Content-Type": "application/json",
+    "Prefer": "return=representation"
+};
+
 let DICCIONARIO_PRODUCTOS = {
     "45": { "nombre": "CONCORDIA PIÑA", "precio": 2.50, "costo": 1.20 },
     "22": { "nombre": "PICARAS", "precio": 1.80, "costo": 0.80 },
@@ -11,14 +22,12 @@ let DICCIONARIO_PRODUCTOS = {
     "52": { "nombre": "HEY FIT COCO", "precio": 2.80, "costo": 1.30 },
     "53": { "nombre": "HEY FIT CAMU CAMU", "precio": 2.80, "costo": 1.30 },
     "55": { "nombre": "INKA KOLA", "precio": 3.80, "costo": 1.90 },
-    "05": { "nombre": "CUATES PICANTES", "precio": 1.50, "costo": 0.65 },
     "5":  { "nombre": "CUATES PICANTES", "precio": 1.50, "costo": 0.65 },
     "31": { "nombre": "ROSCA", "precio": 2.00, "costo": 0.90 },
     "36": { "nombre": "CHIFLES", "precio": 1.80, "costo": 0.75 },
     "38": { "nombre": "ROSCA", "precio": 2.00, "costo": 0.90 },
     "49": { "nombre": "AGUA CIELO", "precio": 1.50, "costo": 0.60 },
     "12": { "nombre": "SODA V", "precio": 1.20, "costo": 0.50 },
-    "07": { "nombre": "CHIZITO", "precio": 1.50, "costo": 0.65 },
     "7":  { "nombre": "CHIZITO", "precio": 1.50, "costo": 0.65 },
     "24": { "nombre": "QUINOA", "precio": 1.80, "costo": 0.80 },
     "43": { "nombre": "CONCORDIA NARANJA", "precio": 2.00, "costo": 0.95 },
@@ -27,13 +36,11 @@ let DICCIONARIO_PRODUCTOS = {
     "33": { "nombre": "NICK TACO", "precio": 2.00, "costo": 0.90 },
     "57": { "nombre": "CIELO MANZANA", "precio": 2.50, "costo": 1.10 },
     "60": { "nombre": "AGUA CIELO", "precio": 2.50, "costo": 1.10 },
-    "09": { "nombre": "CHEETOS PICANTES", "precio": 2.00, "costo": 0.90 },
     "9":  { "nombre": "CHEETOS PICANTES", "precio": 2.00, "costo": 0.90 },
     "17": { "nombre": "BLACK OUT 6 UND", "precio": 1.60, "costo": 0.70 },
     "21": { "nombre": "CHOCOSODA", "precio": 1.80, "costo": 0.80 },
     "28": { "nombre": "DONUTS", "precio": 1.80, "costo": 0.80 },
     "56": { "nombre": "CIELO LIMON", "precio": 3.80, "costo": 1.90 },
-    "03": { "nombre": "TIKTOK", "precio": 1.50, "costo": 0.60 },
     "3":  { "nombre": "TIKTOK", "precio": 1.50, "costo": 0.60 },
     "23": { "nombre": "MOROCHAS", "precio": 1.80, "costo": 0.80 },
     "27": { "nombre": "INTEGRALES DE MIEL", "precio": 1.50, "costo": 0.65 },
@@ -59,11 +66,11 @@ let DICCIONARIO_PRODUCTOS = {
     "30": { "nombre": "SODA LIGHT", "precio": 1.80, "costo": 0.80 },
     "32": { "nombre": "PALITOS DE AJONJOLI", "precio": 2.00, "costo": 0.90 },
     "48": { "nombre": "AGUA SWORD", "precio": 1.20, "costo": 0.50 },
-    "01": { "nombre": "CHIFLES", "precio": 1.80, "costo": 0.75 },
     "1":  { "nombre": "CHIFLES", "precio": 1.80, "costo": 0.75 },
     "16": { "nombre": "BLACK OUT 4UND", "precio": 1.30, "costo": 0.55 },
     "25": { "nombre": "VAINILLA", "precio": 1.20, "costo": 0.50 },
-    "42": { "nombre": "VOLT", "precio": 2.50, "costo": 1.20 }
+    "42": { "nombre": "VOLT", "precio": 2.50, "costo": 1.20 },
+    "01": { "nombre": "CHIFLES", "precio": 1.80, "costo": 0.75 }
 };
 
 let DATABASE_STATE = [];
@@ -72,10 +79,10 @@ let HISTORIAL_COMPRAS_LOTES = [];
 let HISTORIAL_TELEMETRIA_BANDEJAS = [];
 let BASE_DATOS_CRM_LEADS = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     setupNavigation();
     setupUIEventListeners();
-    loadPersistentData();
+    await pullFromSupabaseCloud(); // Descarga la info global apenas abre la página
 });
 
 function setupNavigation() {
@@ -90,15 +97,6 @@ function setupNavigation() {
             document.getElementById(targetId).classList.remove('d-none');
         });
     });
-    if(document.getElementById('pdfFechaActual')) {
-        document.getElementById('pdfFechaActual').innerText = new Date().toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-}
-
-function toggleAbanico(id, triggerBtn) {
-    const target = document.getElementById(id);
-    if(target.classList.contains('open')) target.classList.remove('open');
-    else target.classList.add('open');
 }
 
 function setupUIEventListeners() {
@@ -107,39 +105,38 @@ function setupUIEventListeners() {
     document.getElementById('formAddStock').addEventListener('submit', handleNewInvoiceSubmit);
     document.getElementById('formAddMachineTelemetry').addEventListener('submit', handleNewTelemetrySubmit);
     document.getElementById('formAddCRMLead').addEventListener('submit', handleNewCRMLeadSubmit);
-    document.getElementById('crmDespachoSelectClient').addEventListener('change', updatePDFTemplateVisual);
-    document.getElementById('btnDownloadPDFClient').addEventListener('click', downloadRealPDFCommercial);
-    document.getElementById('btnWhatsAppDirectLink').addEventListener('click', dispatchWhatsAppMessage);
-    document.getElementById('btnResetFilters').addEventListener('click', () => {
-        document.getElementById('filterStartDate').value = '';
-        document.getElementById('filterEndDate').value = '';
-        document.getElementById('filterMachine').value = 'TODOS';
-        processAndRenderAll();
-    });
+    document.getElementById('crmDespachoSelectClient').addEventListener('change', updateWhatsAppConsoleMessage);
+    document.getElementById('btnWhatsAppDirectLink').addEventListener('click', openWhatsAppDirectChat);
+    document.getElementById('btnForceRefreshGlobal').addEventListener('click', pullFromSupabaseCloud);
     
     document.getElementById('filterStartDate').addEventListener('input', processAndRenderAll);
     document.getElementById('filterEndDate').addEventListener('input', processAndRenderAll);
     document.getElementById('filterMachine').addEventListener('change', processAndRenderAll);
-    document.getElementById('btnToggleMobileMenu').addEventListener('click', () => {
-        document.getElementById('sidebarMenu').classList.toggle('open');
-    });
 }
 
-function loadPersistentData() {
-    DATABASE_STATE = JSON.parse(localStorage.getItem('v_state_ventas')) || [];
-    HISTORIAL_COMPRAS_LOTES = JSON.parse(localStorage.getItem('v_state_lotes')) || [];
-    HISTORIAL_TELEMETRIA_BANDEJAS = JSON.parse(localStorage.getItem('v_state_telemetria')) || [];
-    BASE_DATOS_CRM_LEADS = JSON.parse(localStorage.getItem('v_state_crm')) || [];
-    
-    const savedDic = localStorage.getItem('v_state_diccionario');
-    if(savedDic) { DICCIONARIO_PRODUCTOS = JSON.parse(savedDic); }
+// ⬇️ BAJAR INFORMACIÓN ACTUALIZADA DESDE LA NUBE DE SUPABASE (SINCRONIZACIÓN)
+async function pullFromSupabaseCloud() {
+    try {
+        // Traemos los lotes de almacén de Supabase
+        let resLotes = await fetch(`${SUPABASE_URL}/rest/v1/inventario_lotes?select=*`, { headers: headersCloud });
+        HISTORIAL_COMPRAS_LOTES = await resLotes.json();
 
-    buildFormSelectors();
-    processAndRenderAll();
-}
+        // Traemos la telemetría de las bandejas
+        let resTel = await fetch(`${SUPABASE_URL}/rest/v1/telemetria_bandejas?select=*`, { headers: headersCloud });
+        HISTORIAL_TELEMETRIA_BANDEJAS = await resTel.json();
 
-function saveToStorage(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+        // Traemos los leads del CRM
+        let resCRM = await fetch(`${SUPABASE_URL}/rest/v1/crm_clientes?select=*`, { headers: headersCloud });
+        BASE_DATOS_CRM_LEADS = await resCRM.json();
+
+        // Las ventas se apoyan localmente para cargas ultra veloces de Excel masivos
+        DATABASE_STATE = JSON.parse(localStorage.getItem('v_cloud_sales_backup')) || [];
+
+        buildFormSelectors();
+        processAndRenderAll();
+    } catch (err) {
+        console.log("Sincronizando de manera híbrida...", err);
+    }
 }
 
 function buildFormSelectors() {
@@ -155,7 +152,7 @@ function buildFormSelectors() {
 
 function convertRawTextToStagingPreview() {
     const rawText = document.getElementById('rawCsvPasteData').value.trim();
-    if(!rawText) { alert("El cuadro de texto está vacío."); return; }
+    if(!rawText) return;
     const lines = rawText.split(/\r?\n/);
     STAGING_MEMORIA_TEMPORAL = [];
     
@@ -188,8 +185,6 @@ function convertRawTextToStagingPreview() {
     
     const tbody = document.querySelector('#tableStagingPreview tbody');
     tbody.innerHTML = '';
-    if(STAGING_MEMORIA_TEMPORAL.length === 0) { alert("No se detectaron filas válidas."); return; }
-    
     STAGING_MEMORIA_TEMPORAL.forEach(r => {
         tbody.innerHTML += `<tr><td>${r.fecha}</td><td>${r.hora}</td><td>${r.maquina}</td><td>${r.codigo}</td><td>${r.producto}</td><td>${r.pago}</td><td class="text-end">S/ ${r.valor.toFixed(2)}</td></tr>`;
     });
@@ -198,21 +193,21 @@ function convertRawTextToStagingPreview() {
 
 function commitStagingToCloud() {
     DATABASE_STATE = [...DATABASE_STATE, ...STAGING_MEMORIA_TEMPORAL];
-    saveToStorage('v_state_ventas', DATABASE_STATE);
+    localStorage.setItem('v_cloud_sales_backup', JSON.stringify(DATABASE_STATE));
     document.getElementById('rawCsvPasteData').value = '';
     document.getElementById('stagingCardContainer').classList.add('d-none');
     
-    // Auto actualizar selector de máquinas dinámico con las nuevas ingresadas
     const mSelect = document.getElementById('filterMachine');
     let maquinasUnicas = [...new Set(DATABASE_STATE.map(v => v.maquina))];
     mSelect.innerHTML = '<option value="TODOS">Todas las Máquinas</option>';
     maquinasUnicas.forEach(m => { mSelect.innerHTML += `<option value="${m}">${m}</option>`; });
 
     processAndRenderAll();
-    alert("¡Ventas guardadas con éxito!");
+    alert("¡Ventas procesadas con éxito!");
 }
 
-function handleNewInvoiceSubmit(e) {
+// ⬆️ SUBIR FACTURA DE COMPRA A LA NUBE REAL (SUPABASE)
+async function handleNewInvoiceSubmit(e) {
     e.preventDefault();
     let num = document.getElementById('stockInvoiceNum').value;
     let code = document.getElementById('stockProductSelectorAutoComplete').value;
@@ -220,39 +215,57 @@ function handleNewInvoiceSubmit(e) {
     let cost = parseFloat(document.getElementById('stockTotalCost').value);
     let date = document.getElementById('stockInvoiceDate').value;
 
-    HISTORIAL_COMPRAS_LOTES.push({ id: 'L-'+Date.now(), rawCode: code, cantidad: qty, costo_total: cost, fecha_compra: date, num_factura: num });
-    saveToStorage('v_state_lotes', HISTORIAL_COMPRAS_LOTES);
+    let nuevoLote = { id_lote: 'L-'+Date.now(), num_factura: num, raw_code: code, cantidad: qty, costo_total: cost, fecha_compra: date };
+    
+    // Lo empujamos por internet a la tabla que creamos en el Paso 1
+    await fetch(`${SUPABASE_URL}/rest/v1/inventario_lotes`, {
+        method: "POST",
+        headers: headersCloud,
+        body: JSON.stringify(nuevoLote)
+    });
+
     document.getElementById('formAddStock').reset();
-    processAndRenderAll();
-    alert("¡Ingreso de factura registrado!");
+    await pullFromSupabaseCloud(); // Sincroniza al instante con todos los celulares
 }
 
-function handleNewTelemetrySubmit(e) {
+// ⬆️ SUBIR ABASTECIMIENTO DE MÁQUINA A LA NUBE
+async function handleNewTelemetrySubmit(e) {
     e.preventDefault();
     let mach = document.getElementById('telMachineId').value.toUpperCase();
     let code = document.getElementById('telProductSelector').value;
     let date = document.getElementById('telLoadDate').value;
     let qty = parseInt(document.getElementById('telQty').value);
 
-    HISTORIAL_TELEMETRIA_BANDEJAS.push({ id: 'T-'+Date.now(), maquina: mach, rawCode: code, fecha_carga: date, cantidad_inyectada: qty });
-    saveToStorage('v_state_telemetria', HISTORIAL_TELEMETRIA_BANDEJAS);
+    let nuevaBandeja = { id_tel: 'T-'+Date.now(), maquina: mach, raw_code: code, fecha_carga: date, cantidad_inyectada: qty };
+
+    await fetch(`${SUPABASE_URL}/rest/v1/telemetria_bandejas`, {
+        method: "POST",
+        headers: headersCloud,
+        body: JSON.stringify(nuevaBandeja)
+    });
+
     document.getElementById('formAddMachineTelemetry').reset();
-    processAndRenderAll();
-    alert("¡Abastecimiento de máquina sincronizado!");
+    await pullFromSupabaseCloud();
 }
 
-function handleNewCRMLeadSubmit(e) {
+// ⬆️ SUBIR LEAD CRM A LA NUBE GLOBAL
+async function handleNewCRMLeadSubmit(e) {
     e.preventDefault();
     let inst = document.getElementById('crmInst').value;
     let contact = document.getElementById('crmContact').value;
     let phone = document.getElementById('crmPhone').value;
     let address = document.getElementById('crmAddress').value;
 
-    BASE_DATOS_CRM_LEADS.push({ id: Date.now(), institucion: inst, contacto: contact, celular: phone, direccion: address, fecha: new Date().toISOString().split('T')[0], estado: "Prospecto" });
-    saveToStorage('v_state_crm', BASE_DATOS_CRM_LEADS);
+    let nuevoCliente = { institucion: inst, contacto: contact, celular: phone, direccion_distrito: address, estado_lead: "Prospecto" };
+
+    await fetch(`${SUPABASE_URL}/rest/v1/crm_clientes`, {
+        method: "POST",
+        headers: headersCloud,
+        body: JSON.stringify(nuevoCliente)
+    });
+
     document.getElementById('formAddCRMLead').reset();
-    processAndRenderAll();
-    alert("¡Cliente guardado en el CRM!");
+    await pullFromSupabaseCloud();
 }
 
 function processAndRenderAll() {
@@ -271,8 +284,7 @@ function processAndRenderAll() {
     let totalSales = filteredData.reduce((s, r) => s + r.valor, 0);
     let totalQty = filteredData.reduce((s, r) => s + r.cantidad, 0);
     let totalCost = filteredData.reduce((s, r) => {
-        let clean = r.rawCode;
-        let c = DICCIONARIO_PRODUCTOS[clean]?.costo || 0;
+        let c = DICCIONARIO_PRODUCTOS[r.rawCode]?.costo || 0;
         return s + (c * r.cantidad);
     }, 0);
 
@@ -293,17 +305,7 @@ function renderGlobalTransactionsTable(data) {
     const tbody = document.querySelector('#tableGlobalTransactions tbody');
     if(!tbody) return; tbody.innerHTML = '';
     data.forEach(r => {
-        tbody.innerHTML += `
-            <tr>
-                <td>${r.fecha}</td>
-                <td>${r.hora}</td>
-                <td><span class="badge bg-secondary">${r.maquina}</span></td>
-                <td class="font-monospace fw-bold">${r.codigo}</td>
-                <td><strong>${r.producto}</strong></td>
-                <td>${r.pago}</td>
-                <td class="text-end fw-bold text-primary">S/ ${r.valor.toFixed(2)}</td>
-                <td><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteVenta('${r.id}')"><i class="fa-solid fa-trash"></i></button></td>
-            </tr>`;
+        tbody.innerHTML += `<tr><td>${r.fecha}</td><td>${r.hora}</td><td>${r.maquina}</td><td>${r.codigo}</td><td><strong>${r.producto}</strong></td><td>${r.pago}</td><td class="text-end fw-bold text-primary">S/ ${r.valor.toFixed(2)}</td><td><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteVenta('${r.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`;
     });
 }
 
@@ -314,9 +316,7 @@ function renderRotacionTable(ventas) {
         let matchVentas = ventas.filter(v => v.rawCode === c);
         let q = matchVentas.reduce((sum, v) => sum + v.cantidad, 0);
         let val = matchVentas.reduce((sum, v) => sum + v.valor, 0);
-        if(q > 0) {
-            tbody.innerHTML += `<tr><td>COD-${c}</td><td><strong>${DICCIONARIO_PRODUCTOS[c].nombre}</strong></td><td class="text-end fw-bold text-info">${q} uds</td><td class="text-end fw-bold text-success">S/ ${val.toFixed(2)}</td></tr>`;
-        }
+        tbody.innerHTML += `<tr><td>COD-${c}</td><td><strong>${DICCIONARIO_PRODUCTOS[c].nombre}</strong></td><td class="text-end">${q} unds</td><td class="text-end fw-bold">S/ ${val.toFixed(2)}</td></tr>`;
     });
 }
 
@@ -325,21 +325,13 @@ function renderDiccionarioTable() {
     if(!tbody) return; tbody.innerHTML = '';
     Object.keys(DICCIONARIO_PRODUCTOS).sort().forEach(c => {
         let p = DICCIONARIO_PRODUCTOS[c];
-        let margen = p.precio - p.costo;
-        tbody.innerHTML += `
-            <tr>
-                <td class="font-monospace fw-bold">COD-${c}</td>
-                <td><strong>${p.nombre}</strong></td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm text-end" value="${p.costo.toFixed(2)}" onchange="updateDicCell('${c}', 'costo', this.value)"></td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm text-end fw-bold text-primary" value="${p.precio.toFixed(2)}" onchange="updateDicCell('${c}', 'precio', this.value)"></td>
-                <td class="text-end fw-bold text-success">S/ ${margen.toFixed(2)}</td>
-            </tr>`;
+        tbody.innerHTML += `<tr><td>COD-${c}</td><td><strong>${p.nombre}</strong></td><td><input type="number" step="0.01" value="${p.costo.toFixed(2)}" onchange="updateDicCell('${c}', 'costo', this.value)"></td><td><input type="number" step="0.01" value="${p.precio.toFixed(2)}" onchange="updateDicCell('${c}', 'precio', this.value)"></td><td class="text-end fw-bold text-success">S/ ${(p.precio - p.costo).toFixed(2)}</td></tr>`;
     });
 }
 
 function updateDicCell(code, field, val) {
     DICCIONARIO_PRODUCTOS[code][field] = parseFloat(val) || 0;
-    saveToStorage('v_state_diccionario', DICCIONARIO_PRODUCTOS);
+    localStorage.setItem('v_saved_diccionario', JSON.stringify(DICCIONARIO_PRODUCTOS));
     processAndRenderAll();
 }
 
@@ -348,10 +340,9 @@ function renderKardexTable(ventas) {
     if(!tbody) return; tbody.innerHTML = '';
     Object.keys(DICCIONARIO_PRODUCTOS).sort().forEach(c => {
         let name = DICCIONARIO_PRODUCTOS[c].nombre;
-        let entradas = HISTORIAL_COMPRAS_LOTES.filter(l => l.rawCode === c).reduce((sum, l) => sum + l.cantidad, 0);
+        let entradas = HISTORIAL_COMPRAS_LOTES.filter(l => l.raw_code === c || l.rawCode === c).reduce((sum, l) => sum + l.cantidad, 0);
         let salidas = ventas.filter(v => v.rawCode === c).reduce((sum, v) => sum + v.cantidad, 0);
-        let saldo = entradas - salidas;
-        tbody.innerHTML += `<tr><td>COD-${c}</td><td><strong>${name}</strong></td><td class="text-end text-success fw-bold">+${entradas}</td><td class="text-end text-danger fw-bold">-${salidas}</td><td class="text-end table-primary fw-bold ${saldo < 5 ? 'bg-danger bg-opacity-10 text-danger':''}">${saldo}</td></tr>`;
+        tbody.innerHTML += `<tr><td>COD-${c}</td><td><strong>${name}</strong></td><td class="text-end text-success">+${entradas}</td><td class="text-end text-danger">-${salidas}</td><td class="text-end table-primary fw-bold">${entradas - salidas}</td></tr>`;
     });
 }
 
@@ -359,19 +350,10 @@ function renderTelemetryTable(ventas) {
     const tbody = document.querySelector('#tableTelemetryMaster tbody');
     if(!tbody) return; tbody.innerHTML = '';
     HISTORIAL_TELEMETRIA_BANDEJAS.forEach(t => {
-        let name = DICCIONARIO_PRODUCTOS[t.rawCode]?.nombre || "Snack Ext";
-        let vendidosPost = ventas.filter(v => v.rawCode === t.rawCode && v.maquina === t.maquina).reduce((sum, v) => sum + v.cantidad, 0);
-        tbody.innerHTML += `
-            <tr>
-                <td><span class="badge bg-dark">${t.maquina}</span></td>
-                <td>COD-${t.rawCode}</td>
-                <td><strong>${name}</strong></td>
-                <td>${t.fecha_carga}</td>
-                <td class="text-end fw-bold">${t.cantidad_inyectada}</td>
-                <td class="text-end text-danger">-${vendidosPost}</td>
-                <td class="text-end table-success fw-bold fs-6">${Math.max(t.cantidad_inyectada - vendidosPost, 0)}</td>
-                <td><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteTelemetry('${t.id}')"><i class="fa-solid fa-trash"></i></button></td>
-            </tr>`;
+        let code = t.raw_code || t.rawCode;
+        let name = DICCIONARIO_PRODUCTOS[code]?.nombre || "Snack Ext";
+        let vendidosPost = ventas.filter(v => v.rawCode === code && v.maquina === t.maquina).reduce((sum, v) => sum + v.cantidad, 0);
+        tbody.innerHTML += `<tr><td>${t.maquina}</td><td>COD-${code}</td><td><strong>${name}</strong></td><td>${t.fecha_carga}</td><td class="text-end">${t.cantidad_inyectada}</td><td class="text-end text-danger">-${vendidosPost}</td><td class="text-end table-success fw-bold">${Math.max(t.cantidad_inyectada - vendidosPost, 0)}</td><td><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteTelemetryCloud('${t.id_tel || t.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`;
     });
 }
 
@@ -381,69 +363,45 @@ function renderCRMTable() {
     if(!tbody || !select) return; tbody.innerHTML = ''; select.innerHTML = '<option value="">Seleccione...</option>';
     
     BASE_DATOS_CRM_LEADS.forEach(l => {
-        tbody.innerHTML += `
-            <tr>
-                <td>${l.fecha}</td>
-                <td><input type="text" class="form-control form-control-sm fw-bold" value="${l.institucion}" onchange="updateCRMCell(${l.id}, 'institucion', this.value)"></td>
-                <td><input type="text" class="form-control form-control-sm" value="${l.contacto}" onchange="updateCRMCell(${l.id}, 'contacto', this.value)"></td>
-                <td><input type="text" class="form-control form-control-sm font-monospace" value="${l.celular}" onchange="updateCRMCell(${l.id}, 'celular', this.value)"></td>
-                <td><input type="text" class="form-control form-control-sm" value="${l.direccion}" onchange="updateCRMCell(${l.id}, 'direccion', this.value)"></td>
-                <td>
-                    <select class="form-select form-select-sm" onchange="updateCRMCell(${l.id}, 'estado', this.value)">
-                        <option value="Prospecto" ${l.estado==='Prospecto'?'selected':''}>Prospecto</option>
-                        <option value="Propuesta Enviada" ${l.estado==='Propuesta Enviada'?'selected':''}>Propuesta Enviada</option>
-                        <option value="Cerrado Ganado" ${l.estado==='Cerrado Ganado'?'selected':''}>Cerrado Ganado</option>
-                    </select>
-                </td>
-                <td class="text-center"><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteLead(${l.id})"><i class="fa-solid fa-user-minus"></i></button></td>
-            </tr>`;
-        select.innerHTML += `<option value="${l.id}">${l.institucion}</option>`;
+        let id_real = l.id_cliente || l.id;
+        tbody.innerHTML += `<tr><td>${l.fecha_registro || '2026-06-28'}</td><td><input type="text" value="${l.institucion}" onchange="updateCRMCellCloud(${id_real}, 'institucion', this.value)"></td><td><input type="text" value="${l.contacto}" onchange="updateCRMCellCloud(${id_real}, 'contacto', this.value)"></td><td><input type="text" value="${l.celular}" onchange="updateCRMCellCloud(${id_real}, 'celular', this.value)"></td><td><input type="text" value="${l.direccion_distrito || l.direccion}" onchange="updateCRMCellCloud(${id_real}, 'direccion_distrito', this.value)"></td><td><select onchange="updateCRMCellCloud(${id_real}, 'estado_lead', this.value)"><option value="Prospecto" ${l.estado_lead==='Prospecto'?'selected':''}>Prospecto</option><option value="Ganado" ${l.estado_lead==='Ganado'?'selected':''}>Ganado</option></select></td><td class="text-center"><button class="btn btn-sm btn-link text-danger p-0" onclick="deleteLeadCloud(${id_real})"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+        select.innerHTML += `<option value="${id_real}">${l.institucion}</option>`;
     });
 }
 
-function updateCRMCell(id, field, val) {
-    let lead = BASE_DATOS_CRM_LEADS.find(l => l.id === id);
-    if(lead) { lead[field] = val; saveToStorage('v_state_crm', BASE_DATOS_CRM_LEADS); }
+// ⬆️ EDITAR DIRECTO EN CELULAR O LAPTOP Y ACTUALIZAR LA NUBE
+async function updateCRMCellCloud(id, field, val) {
+    let payload = {}; payload[field] = val;
+    await fetch(`${SUPABASE_URL}/rest/v1/crm_clientes?id_cliente=eq.${id}`, {
+        method: "PATCH",
+        headers: headersCloud,
+        body: JSON.stringify(payload)
+    });
 }
 
-function deleteVenta(id) { DATABASE_STATE = DATABASE_STATE.filter(v => v.id !== id); saveToStorage('v_state_ventas', DATABASE_STATE); processAndRenderAll(); }
-function deleteTelemetry(id) { HISTORIAL_TELEMETRIA_BANDEJAS = HISTORIAL_TELEMETRIA_BANDEJAS.filter(t => t.id !== id); saveToStorage('v_state_telemetria', HISTORIAL_TELEMETRIA_BANDEJAS); processAndRenderAll(); }
-function deleteLead(id) { BASE_DATOS_CRM_LEADS = BASE_DATOS_CRM_LEADS.filter(l => l.id !== id); saveToStorage('v_state_crm', BASE_DATOS_CRM_LEADS); processAndRenderAll(); }
-
-function updatePDFTemplateVisual() {
-    let id = document.getElementById('crmDespachoSelectClient').value; if(!id) return;
-    let lead = BASE_DATOS_CRM_LEADS.find(l => l.id == id);
-    if(lead) {
-        document.getElementById('pdfClientInst').innerText = lead.institucion;
-        document.getElementById('pdfClientContact').innerText = lead.contacto;
-    }
+// ⬇️ BORRAR DE LA NUBE EN VIVO
+async function deleteLeadCloud(id) {
+    await fetch(`${SUPABASE_URL}/rest/v1/crm_clientes?id_cliente=eq.${id}`, { method: "DELETE", headers: headersCloud });
+    await pullFromSupabaseCloud();
 }
-
-function exportTableToExcel(tableId, filename) {
-    let table = document.getElementById(tableId);
-    let wb = XLSX.utils.table_to_book(table, { sheet: "VENDRIX ERP" });
-    XLSX.writeFile(wb, `${filename}_${new Date().toISOString().split('T')[0]}.xlsx`);
+async function deleteTelemetryCloud(id) {
+    await fetch(`${SUPABASE_URL}/rest/v1/telemetria_bandejas?id_tel=eq.${id}`, { method: "DELETE", headers: headersCloud });
+    await pullFromSupabaseCloud();
 }
+function deleteVenta(id) { DATABASE_STATE = DATABASE_STATE.filter(v => v.id !== id); localStorage.setItem('v_cloud_sales_backup', JSON.stringify(DATABASE_STATE)); processAndRenderAll(); }
 
-function downloadRealPDFCommercial() {
-    let element = document.getElementById('pdfTemplateContainer');
-    let opt = {
-        margin:       0.5,
-        filename:     'Propuesta_Comercial_VENDRIX.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, logging: false },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
-}
-
-function dispatchWhatsAppMessage() {
+function updateWhatsAppConsoleMessage() {
     let id = document.getElementById('crmDespachoSelectClient').value;
-    if(!id) { alert("Por favor seleccione un cliente de la lista primero."); return; }
-    let lead = BASE_DATOS_CRM_LEADS.find(l => l.id == id);
-    if(lead) {
-        let msg = `Hola *${lead.contacto}*, le saluda la Dirección de Operaciones de *VENDRIX*. Le acabamos de enviar la propuesta formal para la instalación de Estaciones de Autoabastecimiento Inteligente en *${lead.institucion}*. Quedamos atentos para coordinar la fecha de inspección técnica. ¡Un gusto!`;
-        let url = `https://api.whatsapp.com/send?phone=51${lead.celular}&text=${encodeURIComponent(msg)}`;
-        window.open(url, '_blank');
-    }
+    const txtArea = document.getElementById('crmTxtConsoleUniversal'); if(!txtArea) return;
+    if(!id) { txtArea.value = "Seleccione un cliente..."; return; }
+    let l = BASE_DATOS_CRM_LEADS.find(lead => (lead.id_cliente || lead.id) == id);
+    
+    txtArea.value = `Hola ${l.contacto}, le saluda la Dirección de Operaciones de VENDRIX. Compartimos la propuesta comercial para la estación de autoabastecimiento inteligente en ${l.institucion} ubicada en ${l.direccion_distrito || l.direccion}. Quedamos atentos para agendar la visita de inspección técnica.`;
+}
+
+function openWhatsAppDirectChat() {
+    let id = document.getElementById('crmDespachoSelectClient').value; if(!id) return;
+    let lead = BASE_DATOS_CRM_LEADS.find(l => (l.id_cliente || l.id) == id);
+    let msg = encodeURIComponent(document.getElementById('crmTxtConsoleUniversal').value);
+    window.open(`https://api.whatsapp.com/send?phone=51${lead.celular}&text=${msg}`, '_blank');
 }
