@@ -3,38 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VENDRIX ERP - Sistema de Control Central</title>
+    <title>VENDRIX BI - Enterprise Cloud ERP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --primary-color: #0f172a;
-            --brand-blue: #2563eb;
-            --bg-light: #f1f5f9;
-            --border-color: #cbd5e1;
+            --primary-color: #1e3a8a;
+            --secondary-color: #0f172a;
+            --accent-color: #3b82f6;
+            --bg-light: #f8fafc;
+            --card-border: #e2e8f0;
         }
-        body { background-color: var(--bg-light); font-family: system-ui, -apple-system, sans-serif; color: #1e293b; }
+        body { background-color: var(--bg-light); font-family: system-ui, -apple-system, sans-serif; color: #334155; overflow-x: hidden; }
         
-        /* SIDEBAR PROFESIONAL SIN CORONAS */
-        .sidebar { background-color: var(--primary-color); width: 260px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 1030; padding: 20px 0; transition: all 0.3s ease; }
-        .sidebar .brand { padding: 0 24px 20px 24px; color: #fff; font-weight: 700; font-size: 1.2rem; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: 10px; }
-        .menu-category-trigger { background: none; border: none; color: #94a3b8; padding: 12px 24px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+        /* SIDEBAR ORIGINAL CON MENÚ DE ABANICO */
+        .sidebar { background-color: var(--secondary-color); width: 260px; position: fixed; top: 0; bottom: 0; left: 0; z-index: 1030; padding: 20px 0; transition: all 0.3s ease; }
+        .sidebar .brand { padding: 0 24px 20px 24px; color: #fff; font-weight: 800; font-size: 1.25rem; border-bottom: 1px solid #334155; }
+        .menu-category-trigger { background: none; border: none; color: #94a3b8; padding: 12px 24px; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.5px; }
+        .menu-category-trigger:hover { color: #fff; }
         .submenu-wrapper { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #1e293b; }
         .submenu-wrapper.open { max-height: 500px; transition: max-height 0.3s ease-in; }
-        .sidebar .nav-link { color: #cbd5e1; padding: 10px 32px; font-weight: 500; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background-color: var(--brand-blue); }
+        .sidebar .nav-link { color: #cbd5e1; padding: 10px 32px; font-weight: 500; font-size: 0.85rem; display: flex; align-items: center; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background-color: #334155; }
         
-        .main-content { margin-left: 260px; padding: 30px; min-height: 100vh; }
-        .card-custom { background: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 24px; shadow-sm: 0 1px 3px rgba(0,0,0,0.1); }
-        .chart-container { position: relative; height: 280px; width: 100%; }
+        .main-content { margin-left: 260px; padding: 30px; transition: all 0.3s ease; min-height: 100vh; }
+        .card-custom { background: #fff; border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
         
         @media (max-width: 991.98px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             .main-content { margin-left: 0; padding: 15px; }
         }
+        .table-responsive { border-radius: 8px; overflow: hidden; }
+        .table-excel-style input, .table-excel-style select { width: 100%; border: 1px solid #cbd5e1; padding: 4px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -44,161 +45,161 @@
     </button>
 
     <div class="sidebar" id="sidebarMenu">
-        <div class="brand">
-            <i class="fa-solid fa-cube text-primary"></i>
-            <span>VENDRIX CONTROL</span>
+        <div class="brand d-flex justify-content-between align-items-center">
+            <span>VENDRIX Central</span>
+            <button class="btn btn-sm btn-outline-light d-lg-none" onclick="document.getElementById('sidebarMenu').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <nav class="nav flex-column mt-3">
             <button class="menu-category-trigger" onclick="toggleAbanico('abanicoBI', this)">
-                <span><i class="fa-solid fa-chart-simple me-2"></i> Operaciones BI</span> <i class="fa-solid fa-chevron-down"></i>
+                <span><i class="fa-solid fa-chart-pie me-2"></i> VENDRIX BI</span> <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div id="abanicoBI" class="submenu-wrapper open">
-                <a class="nav-link active" href="#dashboard-section"><i class="fa-solid fa-gauge"></i> Panel de Control</a>
-                <a class="nav-link" href="#convertidor-section"><i class="fa-solid fa-file-excel"></i> Cargar Reporte Excel</a>
-                <a class="nav-link" href="#productos-section"><i class="fa-solid fa-boxes-stacked"></i> Alertas de Stock</a>
-                <a class="nav-link" href="#diccionario-section"><i class="fa-solid fa-tags"></i> Lista de Precios</a>
-                <a class="nav-link" href="#stock-section"><i class="fa-solid fa-warehouse"></i> Kardex Almacén</a>
-                <a class="nav-link" href="#telemetria-section"><i class="fa-solid fa-display"></i> Stock en Máquinas</a>
+                <a class="nav-link active" href="#dashboard-section">Dashboard Core</a>
+                <a class="nav-link" href="#convertidor-section">Convertidor BI</a>
+                <a class="nav-link" href="#productos-section">Alertas y Rotación</a>
+                <a class="nav-link" href="#diccionario-section">Diccionario y Precios</a>
+                <a class="nav-link" href="#stock-section">Control de Stock</a>
+                <a class="nav-link" href="#telemetria-section">Stock en Máquina</a>
             </div>
 
             <button class="menu-category-trigger" onclick="toggleAbanico('abanicoClientes', this)">
-                <span><i class="fa-solid fa-users me-2"></i> Gestión CRM</span> <i class="fa-solid fa-chevron-right"></i>
+                <span><i class="fa-solid fa-address-book me-2"></i> VENDRIX Clientes</span> <i class="fa-solid fa-chevron-right"></i>
             </button>
             <div id="abanicoClientes" class="submenu-wrapper">
-                <a class="nav-link" href="#crm-base-section"><i class="fa-solid fa-user-group"></i> Registro Leads</a>
-                <a class="nav-link" href="#crm-propuestas-section"><i class="fa-solid fa-paper-plane"></i> Despacho Comercial</a>
+                <a class="nav-link" href="#crm-base-section">Embudo de Leads</a>
+                <a class="nav-link" href="#crm-propuestas-section">Central de Despacho</a>
             </div>
         </nav>
     </div>
 
     <div class="main-content">
-        <header class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <header class="topbar d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
             <div>
-                <h1 class="h4 mb-0 fw-bold text-dark">Plataforma Global VENDRIX</h1>
-                <small class="text-muted">Sincronización en la Nube y Base de Datos Integrada</small>
+                <h1 class="h4 mb-0 fw-bold text-dark">Enterprise Platform — VENDRIX</h1>
+                <small class="text-muted">Infraestructura Serverless en Tiempo Real</small>
             </div>
-            <span class="badge bg-dark py-2 px-3"><i class="fa-solid fa-cloud me-1"></i> Servidor Conectado</span>
         </header>
 
-        <div class="card-custom">
+        <div class="card-custom mb-4">
+            <h6 class="card-title text-uppercase text-muted fw-bold small mb-3"><i class="fa-solid fa-filter me-2"></i>Filtros Globales Dinómicos</h6>
             <div class="row g-2">
-                <div class="col-md-3"><label class="form-label small fw-bold">Fecha Inicio</label><input type="date" id="filterStartDate" class="form-control form-control-sm"></div>
-                <div class="col-md-3"><label class="form-label small fw-bold">Fecha Fin</label><input type="date" id="filterEndDate" class="form-control form-control-sm"></div>
-                <div class="col-md-3"><label class="form-label small fw-bold">Máquina</label><select id="filterMachine" class="form-select form-select-sm"><option value="TODOS">Todas</option></select></div>
-                <div class="col-md-3 d-flex align-items-end"><button id="btnForceRefreshGlobal" class="btn btn-sm btn-primary w-100 fw-bold"><i class="fa-solid fa-rotate"></i> Actualizar Todo</button></div>
+                <div class="col-md-3"><label class="form-label small fw-bold">Fecha Inicio</label><input type="date" id="filterStartDate" class="form-control"></div>
+                <div class="col-md-3"><label class="form-label small fw-bold">Fecha Fin</label><input type="date" id="filterEndDate" class="form-control"></div>
+                <div class="col-md-4"><label class="form-label small fw-bold">Seleccionar Máquina</label><select id="filterMachine" class="form-select"><option value="TODOS">Todas las Máquinas</option></select></div>
+                <div class="col-md-2 d-flex align-items-end"><button id="btnForceRefreshGlobal" class="btn btn-primary w-100 fw-bold">Refrescar</button></div>
             </div>
         </div>
 
         <div id="dashboard-section" class="content-view">
             <div class="row g-2 mb-4">
-                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center"><h6>Ventas Totales</h6><div class="h3 fw-bold text-primary" id="kpiTotalSales">S/ 0.00</div></div></div>
-                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center"><h6>Productos Vendidos</h6><div class="h3 fw-bold" id="kpiTotalQty">0</div></div></div>
-                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center"><h6>Ticket Promedio</h6><div class="h3 fw-bold text-warning" id="kpiAvgTicket">S/ 0.00</div></div></div>
-                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center bg-dark text-white"><h6>Utilidad Estimada</h6><div class="h3 fw-bold text-success" id="kpiTotalProfit">S/ 0.00</div></div></div>
+                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center"><h6>Ventas Totales</h6><div class="h3 my-1 fw-bold text-primary" id="kpiTotalSales">S/ 0.00</div></div></div>
+                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center"><h6>Unidades Vendidas</h6><div class="h3 my-1 fw-bold text-info" id="kpiTotalQty">0</div></div></div>
+                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center"><h6>Ticket Promedio</h6><div class="h3 my-1 fw-bold text-warning" id="kpiAvgTicket">S/ 0.00</div></div></div>
+                <div class="col-md-3"><div class="card-custom p-3 mb-0 text-center bg-dark text-white"><h6>Ganancia Real</h6><div class="h3 my-1 fw-bold text-success" id="kpiTotalProfit">S/ 0.00</div></div></div>
             </div>
-            <div class="row g-3">
-                <div class="col-md-8"><div class="card-custom"><h6>Línea Temporal de Ventas</h6><div class="chart-container"><canvas id="chartHistory"></canvas></div></div></div>
-                <div class="col-md-4"><div class="card-custom"><h6>Métodos de Pago</h6><div class="chart-container"><canvas id="chartPayments"></canvas></div></div></div>
+            <div class="card-custom">
+                <h6>Historial de Transacciones Registradas</h6>
+                <div class="table-responsive"><table class="table table-striped table-bordered small" id="tableGlobalTransactions"><thead><tr><th>Fecha</th><th>Hora</th><th>Máquina</th><th>Código</th><th>Producto</th><th>Pago</th><th class="text-end">Monto</th><th>Acción</th></tr></thead><tbody></tbody></table></div>
             </div>
         </div>
 
         <div id="convertidor-section" class="content-view d-none">
             <div class="card-custom">
-                <h6>Pegar Reporte del Operador Vending</h6>
-                <textarea id="rawCsvPasteData" class="form-control font-monospace mb-3 small" rows="6" placeholder="Pega aquí las filas de tu Excel..."></textarea>
-                <button class="btn btn-primary btn-sm w-100 fw-bold" id="btnPreviewPasteData">Procesar Transacciones</button>
+                <h6>Convertidor de Archivos Excel</h6>
+                <textarea id="rawCsvPasteData" class="form-control font-monospace mb-3 small" rows="5" placeholder="Pega las filas de tu reporte aquí..."></textarea>
+                <button class="btn btn-warning fw-bold text-dark w-100" id="btnPreviewPasteData">Procesar Reporte</button>
             </div>
             <div class="card-custom d-none" id="stagingCardContainer">
-                <div class="d-flex justify-content-between align-items-center mb-3"><h6>Revisión de Transacciones</h6><button class="btn btn-success btn-sm fw-bold" id="btnCommitStagingData">Subir a la Nube de Supabase</button></div>
-                <div class="table-responsive"><table class="table table-sm table-bordered" id="tableStagingPreview"><thead><tr><th>Fecha</th><th>Hora</th><th>Máquina</th><th>Código</th><th>Producto</th><th>Pago</th><th class="text-end">Monto</th></tr></thead><tbody></tbody></table></div>
+                <div class="d-flex justify-content-between align-items-center mb-3"><h6>Previsualización de Datos</h6><button class="btn btn-success fw-bold" id="btnCommitStagingData">Aprobar Transacciones</button></div>
+                <div class="table-responsive"><table class="table table-striped table-bordered small" id="tableStagingPreview"><thead><tr><th>Fecha</th><th>Hora</th><th>Máquina</th><th>Código</th><th>Producto</th><th>Pago</th><th class="text-end">Valor</th></tr></thead><tbody></tbody></table></div>
             </div>
         </div>
 
         <div id="productos-section" class="content-view d-none">
-            <div class="card-custom"><h6>Ranking de Snacks Populares</h6><div class="table-responsive"><table class="table table-sm table-striped" id="tableTopProducts"><thead><tr><th>Rank</th><th>Código</th><th>Nombre Snack</th><th class="text-end">Unidades</th><th class="text-end">Total Recaudado</th></tr></thead><tbody></tbody></table></div></div>
+            <div class="card-custom">
+                <h6>Ranking de Rotación de Snacks</h6>
+                <div class="table-responsive"><table class="table table-hover small" id="tableTopProducts"><thead><tr><th>Código</th><th>Nombre Snack</th><th class="text-end">Cantidad Vendida</th><th class="text-end">Monto Recaudado</th></tr></thead><tbody></tbody></table></div>
+            </div>
         </div>
 
         <div id="diccionario-section" class="content-view d-none">
-            <div class="card-custom"><h6>Catálogo Central de Precios y Costos</h6><div class="table-responsive"><table class="table table-sm table-bordered" id="tableDicMaster"><thead><tr><th>Código</th><th>Nombre</th><th class="text-end">Costo Compra</th><th class="text-end">Precio Venta</th><th class="text-end">Margen Soles</th><th class="text-end">Margen %</th></tr></thead><tbody></tbody></table></div></div>
+            <div class="card-custom">
+                <h6>Diccionario Maestro de Precios y Costos (Editable)</h6>
+                <div class="table-responsive"><table class="table table-bordered table-excel-style small" id="tableDicMaster"><thead><tr><th>Código</th><th>Nombre Snack</th><th>Costo Compra (S/)</th><th>Precio Venta (S/)</th><th class="text-end">Margen Neto</th></tr></thead><tbody></tbody></table></div>
+            </div>
         </div>
 
         <div id="stock-section" class="content-view d-none">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <div class="card-custom"><h6>Registrar Compra / Factura</h6>
+                    <div class="card-custom">
+                        <h6>Registrar Lote de Compra / Factura</h6>
                         <form id="formAddStock">
                             <div class="mb-2"><label class="form-label small">N° Factura</label><input type="text" id="stockInvoiceNum" class="form-control form-control-sm" required></div>
-                            <div class="mb-2"><label class="form-label small">Producto</label><select id="stockProductSelectorAutoComplete" class="form-select form-select-sm" required></select></div>
+                            <div class="mb-2"><label class="form-label small">Seleccionar Snack</label><select id="stockProductSelectorAutoComplete" class="form-select form-select-sm" required></select></div>
                             <div class="row g-2 mb-2">
-                                <div class="col-6"><label class="form-label small">Cantidad</label><input type="number" id="stockQty" class="form-control form-control-sm" required></div>
+                                <div class="col-6"><label class="form-label small">Cantidad</label><input type="number" id="stockQty" class="form-control form-control-sm" required min="1"></div>
                                 <div class="col-6"><label class="form-label small">Costo Total</label><input type="number" id="stockTotalCost" class="form-control form-control-sm" step="0.01" required></div>
                             </div>
-                            <div class="mb-3"><label class="form-label small">Fecha Registro</label><input type="date" id="stockInvoiceDate" class="form-control form-control-sm" required></div>
-                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Guardar en Base de Datos</button>
+                            <div class="mb-3"><label class="form-label small">Fecha Factura</label><input type="date" id="stockInvoiceDate" class="form-control form-control-sm" required></div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Guardar Entrada</button>
                         </form>
                     </div>
                 </div>
-                <div class="col-md-8"><div class="card-custom"><h6>Kardex en Nube Permanente</h6><div class="table-responsive"><table class="table table-sm table-bordered" id="tableStockKardex"><thead><tr><th>Código</th><th>Producto</th><th class="text-end">Entradas</th><th class="text-end">Salidas (Ventas)</th><th class="text-end table-primary">Stock Almacén</th></tr></thead><tbody></tbody></table></div></div></div>
+                <div class="col-md-8"><div class="card-custom"><h6>Kardex de Inventario Almacén Central</h6><div class="table-responsive"><table class="table table-striped table-bordered small" id="tableStockKardex"><thead><tr><th>Código</th><th>Producto</th><th class="text-end">Entradas</th><th class="text-end">Ventas</th><th class="text-end table-primary">Stock Almacén</th></tr></thead><tbody></tbody></table></div></div></div>
             </div>
         </div>
 
         <div id="telemetria-section" class="content-view d-none">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <div class="card-custom"><h6>Carga Física de Máquinas</h6>
+                    <div class="card-custom">
+                        <h6>Abastecer Resorte Físico</h6>
                         <form id="formAddMachineTelemetry">
-                            <div class="mb-2"><label class="form-label small">Escribir Nombre Máquina</label><input type="text" id="telMachineId" class="form-control form-control-sm" required value="MAQUINA 1"></div>
+                            <div class="mb-2"><label class="form-label small">Nombre Máquina</label><input type="text" id="telMachineId" class="form-control form-control-sm" value="MAQUINA 1" required></div>
                             <div class="mb-2"><label class="form-label small">Snack</label><select id="telProductSelector" class="form-select form-select-sm" required></select></div>
                             <div class="row g-2 mb-3">
                                 <div class="col-6"><label class="form-label small">Fecha Carga</label><input type="date" id="telLoadDate" class="form-control form-control-sm" required></div>
-                                <div class="col-6"><label class="form-label small">Cant. Inyectada</label><input type="number" id="telQty" class="form-control form-control-sm" required></div>
+                                <div class="col-6"><label class="form-label small">Unidades</label><input type="number" id="telQty" class="form-control form-control-sm" required min="1"></div>
                             </div>
-                            <button type="submit" class="btn btn-sm btn-dark w-100 fw-bold">Actualizar Resorte de Máquina</button>
+                            <button type="submit" class="btn btn-info text-dark btn-sm w-100 fw-bold">Sincronizar Resorte</button>
                         </form>
                     </div>
                 </div>
-                <div class="col-md-8"><div class="card-custom"><h6>Monitor de Stock Real por Máquina</h6><div class="table-responsive"><table class="table table-sm table-bordered" id="tableTelemetryMaster"><thead><tr><th>Máquina</th><th>Código</th><th>Producto</th><th>Fecha Carga</th><th class="text-end">Base Carga</th><th class="text-end text-danger">Vendido</th><th class="text-end table-success">Stock Actual</th></tr></thead><tbody></tbody></table></div></div></div>
+                <div class="col-md-8"><div class="card-custom"><h6>Monitor de Canales Físicos</h6><div class="table-responsive"><table class="table table-striped table-bordered small" id="tableTelemetryMaster"><thead><tr><th>Máquina</th><th>Casilla</th><th>Producto</th><th>Fecha Carga</th><th class="text-end">Base</th><th class="text-end">Vendido</th><th class="text-end table-success">Stock Máquina</th><th>Acción</th></tr></thead><tbody></tbody></table></div></div></div>
             </div>
         </div>
 
         <div id="crm-base-section" class="content-view d-none">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <div class="card-custom"><h6>Añadir Lead de Expansión</h6>
+                    <div class="card-custom">
+                        <h6><i class="fa-solid fa-user-plus me-1 text-primary"></i> Registrar Nuevo Lead</h6>
                         <form id="formAddCRMLead">
-                            <div class="mb-2"><label class="form-label small">Institución</label><input type="text" id="crmInst" class="form-control form-control-sm" required></div>
-                            <div class="mb-2"><label class="form-label small">Contacto</label><input type="text" id="crmContact" class="form-control form-control-sm" required></div>
-                            <div class="mb-2"><label class="form-label small">Celular</label><input type="text" id="crmPhone" class="form-control form-control-sm" required></div>
-                            <div class="mb-3"><label class="form-label small">Dirección Sede</label><input type="text" id="crmAddress" class="form-control form-control-sm" required></div>
-                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Dar de Alta</button>
+                            <div class="mb-2"><label class="form-label small">Institución / Sede</label><input type="text" id="crmInst" class="form-control form-control-sm" required></div>
+                            <div class="mb-2"><label class="form-label small">Nombre del Contacto</label><input type="text" id="crmContact" class="form-control form-control-sm" required></div>
+                            <div class="mb-2"><label class="form-label small">Número de Celular</label><input type="text" id="crmPhone" class="form-control form-control-sm" required></div>
+                            <div class="mb-3"><label class="form-label small">Dirección / Distrito</label><input type="text" id="crmAddress" class="form-control form-control-sm" required></div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Alta en el Embudo</button>
                         </form>
                     </div>
                 </div>
-                <div class="col-md-8"><div class="card-custom"><h6>Clientes en Prospección</h6><div class="table-responsive"><table class="table table-sm table-bordered" id="tableCRMMaster"><thead><tr><th>Fecha</th><th>Institución</th><th>Contacto</th><th>Celular</th><th>Estado</th></tr></thead><tbody></tbody></table></div></div></div>
+                <div class="col-md-8"><div class="card-custom"><h6>Base de Datos de Leads Comerciales</h6><div class="table-responsive"><table class="table table-bordered small table-excel-style" id="tableCRMMaster"><thead><tr><th>Fecha Alta</th><th>Institución</th><th>Contacto</th><th>Celular</th><th>Dirección</th><th>Estado</th><th>Acción</th></tr></thead><tbody></tbody></table></div></div></div>
             </div>
         </div>
 
         <div id="crm-propuestas-section" class="content-view d-none">
             <div class="card-custom">
-                <h6>Módulo de Despacho y Descarga de Documento Comercial</h6>
+                <h6>Central de Despacho Manual</h6>
                 <div class="row g-3">
                     <div class="col-md-5">
-                        <label class="form-label small fw-bold">Seleccionar Cliente</label><select id="crmDespachoSelectClient" class="form-select form-select-sm mb-3"></select>
-                        <button class="btn btn-danger btn-sm w-100 fw-bold mb-2" id="btnDownloadPDFClient"><i class="fa-solid fa-file-pdf"></i> Generar y Descargar Carta PDF</button>
-                        <button class="btn btn-success btn-sm w-100 fw-bold" id="btnWhatsAppDirectLink"><i class="fa-brands fa-whatsapp"></i> Abrir WhatsApp Corporativo</button>
+                        <label class="form-label small fw-bold">Seleccionar Cliente Destino</label><select id="crmDespachoSelectClient" class="form-select mb-3"></select>
+                        <button class="btn btn-danger btn-sm w-100 fw-bold mb-2" id="btnDownloadPDFClient"><i class="fa-solid fa-file-pdf"></i> Generar Propuesta</button>
+                        <button class="btn btn-success btn-sm w-100 fw-bold" id="btnWhatsAppDirectLink"><i class="fa-brands fa-whatsapp"></i> Abrir Chat WhatsApp</button>
                     </div>
                     <div class="col-md-7">
-                        <div id="pdfTemplateContainer" style="background: #fff; padding: 25px; border: 1px solid #ddd; font-size: 0.85rem; border-radius: 4px;">
-                            <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 10px; margin-bottom: 15px;">
-                                <h3 style="margin: 0; font-weight: 800; color: #0f172a;">VENDRIX</h3>
-                                <small style="color: #64748b; letter-spacing: 1px;">ESTACIONES DE AUTOABASTECIMIENTO INTELIGENTE</small>
-                            </div>
-                            <p id="pdfFechaActual" class="text-end font-monospace small"></p>
-                            <p><strong>Señores:</strong> <span id="pdfClientInst" class="text-uppercase fw-bold">---</span></p>
-                            <p><strong>Atención:</strong> <span id="pdfClientContact">---</span></p>
-                            <p style="text-align: justify; line-height: 1.5;">Mediante la presente, VENDRIX formaliza la propuesta técnica para la implementación de Estaciones Inteligentes de Snacks y Bebidas en su sede comercial. Nuestro servicio opera bajo el modelo de costo cero de instalación y mantenimiento para su representada, ofreciendo un beneficio directo a sus colaboradores y usuarios con sistemas de pago moderno (Yape, Plin y Tarjetas).</p>
-                            <p style="margin-top: 25px;">Atentamente,<br><strong>Dirección de Operaciones VENDRIX</strong></p>
-                        </div>
+                        <label class="form-label small fw-bold">Cuerpo Mensaje Comercial Listo para Copiar</label>
+                        <textarea id="crmTxtConsoleUniversal" class="form-control font-monospace small" rows="10" readonly></textarea>
                     </div>
                 </div>
             </div>
@@ -207,13 +208,8 @@
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-    
     <script>
         function toggleAbanico(id, triggerBtn) {
-            document.querySelectorAll('.submenu-wrapper').forEach(sw => { if(sw.id !== id) sw.classList.remove('open'); });
             const target = document.getElementById(id);
             if(target.classList.contains('open')) target.classList.remove('open');
             else target.classList.add('open');
